@@ -34,6 +34,7 @@ vim.opt.showmode = false -- Don't show mode in command line
 vim.opt.pumheight = 10 -- Popup menu height
 vim.opt.pumblend = 10 -- Popup menu transparency
 vim.opt.winblend = 0 -- Floating window transparency
+vim.o.winborder = "rounded"
 vim.opt.conceallevel = 0 -- Don't hide markup
 vim.opt.concealcursor = "" -- Don't hide cursor line markup
 vim.opt.lazyredraw = true -- Don't redraw during macros
@@ -56,7 +57,7 @@ vim.opt.hidden = true -- Allow hidden buffers
 vim.opt.errorbells = false -- No error bells
 vim.opt.backspace = "indent,eol,start" -- Better backspace behavior
 vim.opt.autochdir = false -- Dont auto change directory
-vim.opt.iskeyword:append("-") -- Treat dash as part of word
+-- vim.opt.iskeyword:append("-") -- Treat dash as part of word
 vim.opt.path:append("**") -- include subdirectories in search
 vim.opt.selection = "exclusive" -- Selection behavior
 vim.opt.mouse = "a" -- Enable mouse support
