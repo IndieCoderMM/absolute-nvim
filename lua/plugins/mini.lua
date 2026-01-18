@@ -110,6 +110,16 @@ return {
 			--
 			local MiniFiles = require("mini.files")
 			MiniFiles.setup({
+				content = {
+					filter = function(fs_entry)
+						return not vim.startswith(fs_entry.name, ".")
+					end,
+				},
+				windows = {
+					preview = true,
+					width_focus = 30,
+					width_preview = 30,
+				},
 				mappings = {
 					close = "\\",
 					go_in = "l",
@@ -127,12 +137,49 @@ return {
 				},
 			})
 
-			vim.keymap.set("n", "\\", function()
+			vim.keymap.set("n", "\\\\", function()
 				if not MiniFiles.close() then
 					local buf = vim.api.nvim_buf_get_name(0)
-					MiniFiles.open(buf)
+					MiniFiles.open(buf, true)
 				end
 			end, { desc = "Toggle Mini files" })
+
+			vim.keymap.set("n", "\\.", function()
+				if not MiniFiles.close() then
+					MiniFiles.open(vim.uv.cwd(), true)
+				end
+			end, { desc = "Toggle Mini files" })
+
+			local show_dotfiles = false
+			local filter_show = function(fs_entry)
+				return true
+			end
+			local filter_hide = function(fs_entry)
+				return not vim.startswith(fs_entry.name, ".")
+			end
+			local toggle_dotfiles = function()
+				show_dotfiles = not show_dotfiles
+				local new_filter = show_dotfiles and filter_show or filter_hide
+				MiniFiles.refresh({ content = { filter = new_filter } })
+			end
+
+			local files_set_cwd = function()
+				local cur_path = MiniFiles.get_fs_entry().path
+				local cur_dir = vim.fs.dirname(cur_path)
+				if cur_dir ~= nil then
+					vim.fn.chdir(cur_dir)
+				end
+			end
+
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "MiniFilesBufferCreate",
+				callback = function(args)
+					local buf_id = args.data.buf_id
+
+					vim.keymap.set("n", "g.", toggle_dotfiles, { buffer = buf_id, desc = "Toggle hidden files" })
+					vim.keymap.set("n", "gc", files_set_cwd, { buffer = buf_id, desc = "Set cwd to current file" })
+				end,
+			})
 
 			local miniclue = require("mini.clue")
 			miniclue.setup({
