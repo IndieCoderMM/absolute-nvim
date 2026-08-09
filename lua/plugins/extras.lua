@@ -1,16 +1,67 @@
 return {
 	{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
 	{
-		"vague-theme/vague.nvim",
-		lazy = false,
-		priority = 1000,
+		"alvarosevilla95/luatab.nvim",
+		-- dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			require("vague").setup({
-				transparent = true,
+			require("luatab").setup({
+				devicon = function()
+					return ""
+				end,
+				windowCount = function()
+					return ""
+				end,
 			})
-			vim.cmd("colorscheme vague")
 		end,
 	},
+	{
+		"olimorris/onedarkpro.nvim",
+		priority = 1000, -- Ensure it loads first
+		config = function()
+			require("onedarkpro").setup({
+				highlights = {
+					-- Override the selection color
+					CurSearch = { fg = "#c678dd", bg = "#414858" },
+					["@variable"] = { fg = "#abb2bf" },
+					["@variable.builtin"] = { fg = "#e5c07b" },
+					DiagnosticHint = { link = "NonText" },
+					MatchParen = { link = "IncSearch" },
+					-- ["@string"] = { link = "Normal" },
+				},
+				plugins = {
+					all = false,
+					mason = true,
+					blink_cmp = true,
+					gitsigns = true,
+					treesitter = true,
+					telescope = true,
+				},
+			})
+
+			vim.cmd("colorscheme onedark")
+		end,
+	},
+	-- lazy.nvim
+	{
+		"folke/snacks.nvim",
+		---@type snacks.Config
+		opts = {
+			picker = {},
+			terminal = {},
+			input = {},
+		},
+	},
+	-- {
+	-- 	"vague-theme/vague.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("vague").setup({
+	-- 			transparent = false,
+	-- 		})
+	-- 		vim.cmd("colorscheme vague")
+	-- 	end,
+	-- },
 	{ "wakatime/vim-wakatime", lazy = false },
 	{ -- Quick navs between buffers
 		"ThePrimeagen/harpoon",
@@ -114,5 +165,19 @@ return {
 				},
 			})
 		end,
+	},
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
+		-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+		---@module 'render-markdown'
+		---@type render.md.UserConfig
+		opts = {
+			heading = {
+				enabled = true,
+				sign = true,
+				position = "inline",
+			},
+		},
 	},
 }

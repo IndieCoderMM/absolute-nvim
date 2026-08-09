@@ -280,7 +280,7 @@ return {
 				-- Disable "format_on_save lsp_fallback" for languages that don't
 				-- have a well standardized coding style. You can add additional
 				-- languages here or re-enable it for the disabled ones.
-				local disable_filetypes = { css = true, c = true, cpp = true }
+				local disable_filetypes = { css = true, c = true, cpp = true, javascript = false, typescript = false }
 				if disable_filetypes[vim.bo[bufnr].filetype] then
 					return nil
 				else
@@ -514,34 +514,37 @@ return {
 	},
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
+		lazy = false,
 		build = ":TSUpdate",
-		install_dir = vim.fn.stdpath("data") .. "/site",
-		opts = {
-			ensure_installed = {
-				"html",
-				"css",
-				"javascript",
-				"typescript",
-				"tsx",
-				"json",
-				"diff",
-				"yaml",
-				"toml",
-				"bash",
-				"dockerfile",
-				"lua",
-				"luadoc",
-				"markdown",
-				"markdown_inline",
-				"vim",
-				"vimdoc",
-			},
-			auto_install = true,
-			highlight = {
-				enable = true,
-			},
-			indent = { enable = true },
-		},
+		config = function()
+			require("nvim-treesitter").setup({
+				install_dir = vim.fn.stdpath("data") .. "/site",
+				ensure_installed = {
+					"html",
+					"css",
+					"javascript",
+					"typescript",
+					"tsx",
+					"json",
+					"diff",
+					"yaml",
+					"toml",
+					"bash",
+					"dockerfile",
+					"lua",
+					"luadoc",
+					"markdown",
+					"markdown_inline",
+					"vim",
+					"vimdoc",
+				},
+				auto_install = true,
+				highlight = {
+					enable = true,
+				},
+				indent = { enable = true },
+			})
+		end,
 		--
 		--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
 		--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context

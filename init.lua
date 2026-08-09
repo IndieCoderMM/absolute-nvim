@@ -32,8 +32,8 @@ vim.opt.cmdheight = 1 -- Command line height
 vim.opt.completeopt = "menuone,noinsert,noselect" -- Completion options
 vim.opt.showmode = false -- Don't show mode in command line
 vim.opt.pumheight = 10 -- Popup menu height
-vim.opt.pumblend = 0 -- Popup menu transparency
-vim.opt.winblend = 0 -- Floating window transparency
+vim.opt.pumblend = 10 -- Popup menu transparency
+vim.opt.winblend = 10 -- Floating window transparency
 vim.o.winborder = "rounded"
 vim.opt.conceallevel = 0 -- Don't hide markup
 vim.opt.concealcursor = "" -- Don't hide cursor line markup
@@ -61,7 +61,7 @@ vim.opt.autochdir = false -- Dont auto change directory
 vim.opt.path:append("**") -- include subdirectories in search
 vim.opt.selection = "exclusive" -- Selection behavior
 vim.opt.mouse = "a" -- Enable mouse support
-vim.opt.clipboard:append("unnamedplus", "unnamed") -- Use system clipboard
+vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
 vim.opt.modifiable = true -- Allow buffer modifications
 vim.opt.encoding = "UTF-8" -- Set encoding
 
@@ -82,8 +82,8 @@ mapKey("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 mapKey({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
 
 -- Buffer navigation
-mapKey("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
-mapKey("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
+mapKey("n", "<C-Tab>", ":bnext<CR>", { desc = "Next buffer" })
+mapKey("n", "<C-S-Tab>", ":bprevious<CR>", { desc = "Previous buffer" })
 
 -- Better window navigation
 mapKey("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
@@ -113,8 +113,12 @@ mapKey("v", ">", ">gv", { desc = "Indent right and reselect" })
 mapKey("n", "<C-y>", "ggVG", { desc = "Select all" })
 mapKey("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open quickfix list" })
 mapKey("n", "<leader>k", vim.diagnostic.open_float, { desc = "See diagnostic message" })
-mapKey("n", "<leader>n", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-mapKey("n", "<leader>N", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
+mapKey("n", "<leader>n", function()
+	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Go to next error message" })
+mapKey("n", "<leader>N", function()
+	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Go to previous diagnostic message" })
 
 -- Increment/decrement
 mapKey("n", "+", "<C-a>", { desc = "Increment number" })
@@ -127,10 +131,15 @@ mapKey("n", "<C-d>", "<C-d>zz", { desc = "Half page down" })
 mapKey("n", "<C-u>", "<C-u>zz", { desc = "Half page up" })
 
 -- Find file
-mapKey("n", "<leader>ff", ":find ", { desc = "Find file" })
+-- mapKey("n", "<leader>ff", ":find ", { desc = "Find file" })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 mapKey("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+mapKey("n", "<leader>tt", "<cmd>tabnew +term<CR>", { desc = "[N]ew tab terminal" })
+mapKey("t", "<S-Tab>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+mapKey("n", "<Tab>", "<cmd>tabnext<CR>", { desc = "Next tab" })
+mapKey("n", "<S-Tab>", "<cmd>tabprev<CR>", { desc = "Previous tab" })
 
 -- ============================================================================
 -- USEFUL FUNCTIONS
